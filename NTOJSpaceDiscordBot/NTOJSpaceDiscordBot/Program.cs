@@ -3,6 +3,8 @@ using Discord;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using System.Threading;
+using Discord.WebSocket;
+using Discord.Commands;
 
 namespace NTOJSpaceDiscordBot
 {
@@ -32,6 +34,18 @@ namespace NTOJSpaceDiscordBot
             // using it, at the end of your app's lifetime.
             using var services = ConfigureServices();
 
+            var client = services.GetRequiredService<DiscordSocketClient>();
+            var commandService = services.GetRequiredService<CommandService>();
+
+            // Настраиваем логирования клиента и команд
+            client.Log += LogAsync;
+            commandService.Log += LogAsync;
+
+            // Tokens should be considered secret data and never hard-coded.
+            // We can read from the environment variable to avoid hard coding.
+            await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("NTOJSpaceBotToken"));
+            await client.StartAsync();
+
             await Task.Delay(Timeout.Infinite);
         }
 
@@ -42,6 +56,8 @@ namespace NTOJSpaceDiscordBot
         private ServiceProvider ConfigureServices()
         {
             return new ServiceCollection()
+                .AddSingleton<DiscordSocketClient>()
+                .AddSingleton<CommandService>()
                 .BuildServiceProvider();
         }
 
@@ -52,7 +68,7 @@ namespace NTOJSpaceDiscordBot
         /// <returns>Успешная асинхронная операция.</returns>
         private Task LogAsync(LogMessage log)
         {
-            Console.Write(log.ToString());
+            Console.WriteLine(log.ToString());
 
             return Task.CompletedTask;
         }
