@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Discord.WebSocket;
 using Discord.Commands;
+using NTOJSpaceDiscordBot.Services;
 
 namespace NTOJSpaceDiscordBot
 {
@@ -36,12 +37,8 @@ namespace NTOJSpaceDiscordBot
 
             var client = services.GetRequiredService<DiscordSocketClient>();
             var commandService = services.GetRequiredService<CommandService>();
-
-            // Настраиваем логирования клиента и команд
-            client.Log += LogAsync;
-            client.Ready += ReadyAsync;
-            commandService.Log += LogAsync;
-
+            var logger = services.GetRequiredService<LoggingService>();
+            
             // Tokens should be considered secret data and never hard-coded.
             // We can read from the environment variable to avoid hard coding.
             await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("NTOJSpaceBotToken"));
@@ -59,31 +56,8 @@ namespace NTOJSpaceDiscordBot
             return new ServiceCollection()
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
+                .AddSingleton<LoggingService>()
                 .BuildServiceProvider();
-        }
-
-        /// <summary>
-        /// Логгировать событие Дискорда.
-        /// </summary>
-        /// <param name="log">Объект сообщения Дискорда.</param>
-        /// <returns>Успешная асинхронная операция.</returns>
-        private Task LogAsync(LogMessage log)
-        {
-            Console.WriteLine(log.ToString());
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// The Ready event indicates that the client has opened a
-        /// connection and it is now safe to access the cache.
-        /// </summary>
-        /// <returns>Успешная асинхронная операция.</returns>
-        private Task ReadyAsync()
-        {
-            Console.WriteLine("The Bot is connected!");
-
-            return Task.CompletedTask;
         }
     }
 }
