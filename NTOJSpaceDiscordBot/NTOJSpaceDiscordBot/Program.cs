@@ -44,6 +44,9 @@ namespace NTOJSpaceDiscordBot
             await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("NTOJSpaceBotToken"));
             await client.StartAsync();
 
+            // Here we initialize the logic required to register our commands.
+            await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
+
             await Task.Delay(Timeout.Infinite);
         }
 
@@ -57,6 +60,7 @@ namespace NTOJSpaceDiscordBot
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
                 .AddSingleton<LoggingService>()
+                .AddSingleton<CommandHandlingService>()
                 .BuildServiceProvider();
         }
     }
