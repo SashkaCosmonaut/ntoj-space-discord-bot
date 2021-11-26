@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Discord;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace NTOJSpaceDiscordBot
 {
@@ -11,12 +14,21 @@ namespace NTOJSpaceDiscordBot
         public async Task MainAsync()
         {
             using var services = ConfigureServices();
+
+            await Task.Delay(Timeout.Infinite);
         }
 
         private ServiceProvider ConfigureServices()
         {
             return new ServiceCollection()
                 .BuildServiceProvider();
+        }
+
+        private Task LogAsync(LogMessage log)
+        {
+            Console.Write(log.ToString());
+
+            return Task.CompletedTask;
         }
     }
 }
