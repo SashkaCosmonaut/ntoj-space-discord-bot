@@ -1,12 +1,22 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace NTOJSpaceDiscordBot
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main() 
+            => new Program().MainAsync().GetAwaiter().GetResult();
+
+        public async Task MainAsync()
         {
-            Console.WriteLine("Hello World!");
+            using var services = ConfigureServices();
+        }
+
+        private ServiceProvider ConfigureServices()
+        {
+            return new ServiceCollection()
+                .BuildServiceProvider();
         }
     }
 }
