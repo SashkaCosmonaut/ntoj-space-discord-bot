@@ -39,6 +39,7 @@ namespace NTOJSpaceDiscordBot
 
             // Настраиваем логирования клиента и команд
             client.Log += LogAsync;
+            client.Ready += ReadyAsync;
             commandService.Log += LogAsync;
 
             // Tokens should be considered secret data and never hard-coded.
@@ -69,6 +70,18 @@ namespace NTOJSpaceDiscordBot
         private Task LogAsync(LogMessage log)
         {
             Console.WriteLine(log.ToString());
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// The Ready event indicates that the client has opened a
+        /// connection and it is now safe to access the cache.
+        /// </summary>
+        /// <returns>Успешная асинхронная операция.</returns>
+        private Task ReadyAsync()
+        {
+            Console.WriteLine("The Bot is connected!");
 
             return Task.CompletedTask;
         }
