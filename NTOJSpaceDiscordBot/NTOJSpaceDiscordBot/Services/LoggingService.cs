@@ -11,7 +11,7 @@ namespace NTOJSpaceDiscordBot.Services
     /// </summary>
     public class LoggingService
     {
-        private DiscordSocketClient _client;
+        private readonly DiscordSocketClient _discordClient;
 
         /// <summary>
         /// Настраиваем логирования клиента и команд.
@@ -20,11 +20,11 @@ namespace NTOJSpaceDiscordBot.Services
         /// <param name="commandService">Сервис команд Дискордаю</param>
         public LoggingService(DiscordSocketClient client, CommandService commandService)
         {
-            _client = client;
+            _discordClient = client;
 
-            _client.Log += LogAsync;
-            _client.Ready += ReadyAsync;
-            _client.MessageReceived += Client_MessageReceived;
+            _discordClient.Log += LogAsync;
+            _discordClient.Ready += ReadyAsync;
+            _discordClient.MessageReceived += Client_MessageReceived;
 
             commandService.Log += LogAsync;
         }
@@ -46,7 +46,7 @@ namespace NTOJSpaceDiscordBot.Services
         private Task Client_MessageReceived(SocketMessage arg)
         {
             // Игнорируем сообщения от самого бота
-            if (arg.Author.Id == _client.CurrentUser.Id)
+            if (arg.Author.Id == _discordClient.CurrentUser.Id)
                 return Task.CompletedTask;
 
             Console.WriteLine($"{arg.Author}, {arg.CreatedAt}, {arg.Channel}, {arg.Content}");
