@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -16,15 +17,16 @@ namespace NTOJSpaceDiscordBot.Services
         /// <summary>
         /// Настраиваем логирования клиента и команд.
         /// </summary>
-        /// <param name="client">Клиент Дискорда.</param>
-        /// <param name="commandService">Сервис команд Дискордаю</param>
-        public LoggingService(DiscordSocketClient client, CommandService commandService)
+        /// <param name="services">Контейнер сервисов.</param>
+        public LoggingService(IServiceProvider services)
         {
-            _discordClient = client;
-
+            _discordClient = services.GetRequiredService<DiscordSocketClient>();
+           
             _discordClient.Log += LogAsync;
             _discordClient.Ready += ReadyAsync;
             _discordClient.MessageReceived += Client_MessageReceived;
+
+            var commandService = services.GetRequiredService<CommandService>();
 
             commandService.Log += LogAsync;
         }
