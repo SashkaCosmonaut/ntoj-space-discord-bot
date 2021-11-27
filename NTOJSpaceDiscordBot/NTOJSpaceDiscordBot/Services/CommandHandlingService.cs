@@ -67,6 +67,9 @@ namespace NTOJSpaceDiscordBot.Services
             // for a less traditional command format like !help.
             if (!message.HasCharPrefix('!', ref argPos)) return;
 
+            // TODO: Добавить проверку канала?
+
+            // Create a Command Context.
             var context = new SocketCommandContext(_discordClient, message);
 
             // Perform the execution of the command. In this method,
@@ -75,7 +78,14 @@ namespace NTOJSpaceDiscordBot.Services
             await _commandService.ExecuteAsync(context, argPos, _services);
 
             // Note that normally a result will be returned by this format, but here
-            // we will handle the result in CommandExecutedAsync,
+            // we will handle the result in CommandExecutedAsync.
+
+            // Uncomment the following lines if you want the bot
+            // to send a message if it failed.
+            // This does not catch errors from commands with 'RunMode.Async',
+            // subscribe a handler for '_commands.CommandExecuted' to see those.
+            //if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
+            //    await msg.Channel.SendMessageAsync(result.ErrorReason);
         }
 
         /// <summary>
