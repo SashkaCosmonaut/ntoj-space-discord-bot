@@ -10,7 +10,6 @@ namespace NTOJSpaceDiscordBot.Modules
     public class MovementModule : ModuleBase<SocketCommandContext>
     {
         [Command("forward")]
-        [Alias("Forward", "FORWARD")]
         public async Task Forward()
         {
             await ReplyAsync($"{Context.User} двигается вперёд");
