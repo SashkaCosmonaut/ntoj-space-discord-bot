@@ -29,8 +29,23 @@ namespace NTOJSpaceDiscordBot.Services
             commandService.Log += LogAsync;
         }
 
+        /// <summary>
+        /// Инициализация логгера.
+        /// </summary>
+        /// <returns>Завершенная асинхронная операция.</returns>
+        public Task InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Логгировать сообщение от пользователя Дискорда.
+        /// </summary>
+        /// <param name="arg">Аргументы сообщения.</param>
+        /// <returns>Завершенная асинхронная операция.</returns>
         private Task Client_MessageReceived(SocketMessage arg)
         {
+            // Игнорируем сообщения от самого бота
             if (arg.Author.Id == _client.CurrentUser.Id)
                 return Task.CompletedTask;
 
@@ -42,11 +57,36 @@ namespace NTOJSpaceDiscordBot.Services
         /// <summary>
         /// Логгировать событие Дискорда.
         /// </summary>
-        /// <param name="log">Объект сообщения Дискорда.</param>
-        /// <returns>Успешная асинхронная операция.</returns>
-        private Task LogAsync(LogMessage log)
+        /// <param name="message">Объект сообщения Дискорда.</param>
+        /// <returns>Завершенная асинхронная операция.</returns>
+        private Task LogAsync(LogMessage message)
         {
-            Console.WriteLine(log.ToString());
+            switch (message.Severity)
+            {
+                case LogSeverity.Critical:
+                case LogSeverity.Error:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+
+                case LogSeverity.Warning:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+
+                case LogSeverity.Info:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+
+                case LogSeverity.Verbose:
+                case LogSeverity.Debug:
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    break;
+            }
+
+            Console.WriteLine(message.ToString());
+            
+            // Console.WriteLine($"{DateTime.Now,-19} [{message.Severity,8}] {message.Source}: {message.Message} {message.Exception}");
+
+            Console.ResetColor();
 
             return Task.CompletedTask;
         }
@@ -55,7 +95,7 @@ namespace NTOJSpaceDiscordBot.Services
         /// The Ready event indicates that the client has opened a
         /// connection and it is now safe to access the cache.
         /// </summary>
-        /// <returns>Успешная асинхронная операция.</returns>
+        /// <returns>Завершенная асинхронная операция.</returns>
         private Task ReadyAsync()
         {
             Console.WriteLine("The Bot is connected!");
