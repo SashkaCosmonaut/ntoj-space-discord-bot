@@ -11,12 +11,12 @@ namespace NTOJSpaceDiscordBot.Services
     public class SerialPortService : IDisposable    
     {
         // Константы для общения с другим устройством
-        private const string FORWARD = "f";
-        private const string BACK = "b";
-        private const string LEFT = "l";
-        private const string RIGHT = "r";
-        private const string STOP = "s";
-        private const string OK = "k";
+        public const string FORWARD = "f";
+        public const string BACK = "b";
+        public const string LEFT = "l";
+        public const string RIGHT = "r";
+        public const string STOP = "s";
+        public const string OK = "k";
 
         /// <summary>
         /// Объект последовательного порта.
@@ -60,15 +60,16 @@ namespace NTOJSpaceDiscordBot.Services
         /// <summary>
         /// Отправить команду движения вперёд.
         /// </summary>
+        /// <param name="command">Команда на исполнение.</param>
         /// <returns>Результат выполнения команды.</returns>
-        public async Task<bool> SendForwardAsync()
+        public async Task<bool> SendCommandAsync(string command)
         {
             // Проверяем, что порт создан и открыт
             if (_serialPort == null || !_serialPort.IsOpen)
                 return false;
 
             // Параллельно оправляем команду и ждём результат
-            var taskResult = await Task.Run(() => SendCommand(FORWARD));
+            var taskResult = await Task.Run(() => SendCommand(command));
 
             // Проверяем, что пришёл корректный результат
             return taskResult.Contains(OK);
