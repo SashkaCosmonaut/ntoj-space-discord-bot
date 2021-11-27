@@ -19,16 +19,54 @@
 #define P4          0x44
 #define P5          0x40
 #define P6          0x43
+#define P7          0x07
 #define P8          0x15
+#define P9          0x09
+#define P0          0x19
+#define P_STAR      0x16
+#define P_HASH      0x0D
+#define P_OK        0x1C
+#define P_RIGHT     0x5A
+#define P_LEFT      0x08
+#define P_UP        0x18
+#define P_DOWN      0x52
 
 IRsend sender;        // Объект взаимодействия с ИК-диодом
 
-char incomingString;  // Считываемый с компьютера символ
- 
+char incomingChar;    // Считываемый с компьютера символ
+int command;          // Расшифрованная команда для корабля
+
+// По коду символа (полученного с компа через Serial) возвращает код кнопки на ИК-пульте. 0, если нет соответствия.
+int decodeCommandChar(char commandChar)
+{
+  switch (commandChar) {
+    case FORWARD_STR: return P2;
+    case LEFT_STR:    return P4;
+    case STOP_STR:    return P5;
+    case RIGHT_STR:   return P6;
+    case BACK_STR:    return P8;
+    
+    case '0': return P0;
+    case '1': return P1;
+    case '3': return P3;
+    case '7': return P7;
+    case '9': return P9;
+    case '*': return P_STAR;
+    case '#': return P_HASH;
+    case '.': return P_OK;
+    case '>': return P_RIGHT;
+    case '<': return P_LEFT;
+    case '^': return P_UP;
+    case 'v': return P_DOWN;
+  }
+  
+  return  0;
+}
+
 void setup() {
   Serial.begin(9600); // Устанавливаем последовательное соединение
-    
-  IrSender.begin(IR_SEND_PIN, true);  // Запускаем работу с ИК-диодом
+
+  IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK);  // Запускаем работу с ИК-диодом
 }
 
 void loop() {
@@ -36,34 +74,16 @@ void loop() {
     return;
   }
 
-  while(Serial.available() > 0) { // Считываем всё, что приходит
-    incomingString = Serial.read();
+  while (Serial.available() > 0) { // Считываем всё, что приходит, оставляем последнее
+    incomingChar = Serial.read();
   }
 
+  command = decodeCommandChar(incomingChar);
+  
   // В зависимости от константы посылаем сигнал кораблю, как бы пультом
-  switch (incomingString) {
-    case FORWARD_STR:
-      IrSender.sendNEC(ADDRESS, P2, REPEATS);
-      break;
-        
-    case BACK_STR:
-      IrSender.sendNEC(ADDRESS, P8, REPEATS);
-      break;
-
-    case LEFT_STR:
-      IrSender.sendNEC(ADDRESS, P4, REPEATS);
-      break;
-
-    case RIGHT_STR:
-      IrSender.sendNEC(ADDRESS, P6, REPEATS);
-      break;
-
-    case STOP_STR:
-      IrSender.sendNEC(ADDRESS, P5, REPEATS);
-      break;
-  }
+  IrSender.sendNEC(ADDRESS, command, REPEATS);
 
   Serial.print(OK_STR);   // Отвечаем, что всё ОК
 
-  incomingString = ' ';
+  incomingChar = ' ';
 }
