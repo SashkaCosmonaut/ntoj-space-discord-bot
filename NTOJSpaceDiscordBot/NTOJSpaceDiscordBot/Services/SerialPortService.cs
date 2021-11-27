@@ -15,6 +15,7 @@ namespace NTOJSpaceDiscordBot.Services
         private const string BACK = "b";
         private const string LEFT = "l";
         private const string RIGHT = "r";
+        private const string STOP = "s";
         private const string OK = "k";
 
         /// <summary>
