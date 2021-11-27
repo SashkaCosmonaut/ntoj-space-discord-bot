@@ -50,6 +50,9 @@ namespace NTOJSpaceDiscordBot
             // Here we initialize the logic required to register our commands.
             await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
 
+            // Инициализация последовательного порта
+            await services.GetRequiredService<SerialPortService>().InitializeAsync();
+
             await Task.Delay(Timeout.Infinite);
         }
 
@@ -89,6 +92,7 @@ namespace NTOJSpaceDiscordBot
                 .AddSingleton(new CommandService(commandServiceConfig))
                 .AddSingleton<LoggingService>()
                 .AddSingleton<CommandHandlingService>()
+                .AddSingleton<SerialPortService>()
 
                 // When all your required services are in the collection, build the container.
                 // Tip: There's an overload taking in a 'validateScopes' bool to make sure
