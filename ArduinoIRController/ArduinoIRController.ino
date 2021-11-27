@@ -12,13 +12,11 @@ void setup() {
 
 void loop() {
   if (Serial.available() == 0) {  // Если ничего не пришло, ждём
-    delay(10);
     return;
   }
 
   while(Serial.available() > 0) {
     incomingString = Serial.readString();
-    delay(10);
   }
 
   if (incomingString == FORWARD) {
@@ -26,6 +24,4 @@ void loop() {
   }
 
   incomingString = "";
-
-  delay(10);
 }
