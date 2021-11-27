@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NTOJSpaceDiscordBot.Services
@@ -28,8 +29,10 @@ namespace NTOJSpaceDiscordBot.Services
         {
             _serialPort = new SerialPort
             {
-                PortName = "COM4",
-                BaudRate = 9600
+                PortName = "COM3",
+                BaudRate = 9600,
+                ReadTimeout = 1000,
+                WriteTimeout = 1000
             };
         }
 
@@ -66,9 +69,21 @@ namespace NTOJSpaceDiscordBot.Services
             // Параллельно оправляем команду и ждём результат
             var taskResult = await Task.Run(() => {
 
-                _serialPort.WriteLine(FORWARD);
+                var readBuff = "";
 
-                return _serialPort.ReadLine();
+                _serialPort.DiscardInBuffer();
+                _serialPort.DiscardOutBuffer();
+
+                _serialPort.Write(FORWARD);
+
+                Thread.Sleep(100);
+
+                while(_serialPort.BytesToRead > 0)
+                {
+                    readBuff += _serialPort.ReadExisting();
+                }
+  
+                return readBuff;
             });
 
             // Проверяем, что пришёл корректный результат
