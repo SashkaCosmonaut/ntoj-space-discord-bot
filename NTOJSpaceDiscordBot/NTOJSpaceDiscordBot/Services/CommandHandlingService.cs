@@ -34,7 +34,11 @@ namespace NTOJSpaceDiscordBot.Services
         public async Task InitializeAsync()
         {
             // Register modules that are public and inherit ModuleBase<T>.
+            // Either search the program and add all Module classes that can be found.
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+
+            // Or add Modules manually if you prefer to be a little more explicit:
+            // await _commands.AddModuleAsync<SomeModule>(_services);
         }
 
         public async Task MessageReceivedAsync(SocketMessage rawMessage)
