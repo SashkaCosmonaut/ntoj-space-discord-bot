@@ -29,7 +29,7 @@ namespace NTOJSpaceDiscordBot.Modules
         [Command("forward")]
         public async Task Forward()
         {
-            var result = await _serialPortService.SendForwardAsync();
+            var result = await _serialPortService.SendCommandAsync(SerialPortService.FORWARD);
 
             await ReplyAsync($"{Context.User} двигается вперёд: {result}");
         }
@@ -37,19 +37,33 @@ namespace NTOJSpaceDiscordBot.Modules
         [Command("back")]
         public async Task Back()
         {
-            await ReplyAsync($"{Context.User} двигается назад");
+            var result = await _serialPortService.SendCommandAsync(SerialPortService.BACK);
+
+            await ReplyAsync($"{Context.User} двигается назад: {result}");
         }
 
         [Command("left")]
         public async Task Left()
         {
-            await ReplyAsync($"{Context.User} двигается влево");
+            var result = await _serialPortService.SendCommandAsync(SerialPortService.LEFT);
+
+            await ReplyAsync($"{Context.User} двигается влево: {result}");
         }
 
         [Command("right")]
         public async Task Right()
         {
-            await ReplyAsync($"{Context.User} двигается вправо");
+            var result = await _serialPortService.SendCommandAsync(SerialPortService.RIGHT);
+
+            await ReplyAsync($"{Context.User} двигается вправо: {result}");
+        }
+
+        [Command("stop")]
+        public async Task Stop()
+        {
+            var result = await _serialPortService.SendCommandAsync(SerialPortService.STOP);
+
+            await ReplyAsync($"{Context.User} двигается вправо: {result}");
         }
     }
 }
