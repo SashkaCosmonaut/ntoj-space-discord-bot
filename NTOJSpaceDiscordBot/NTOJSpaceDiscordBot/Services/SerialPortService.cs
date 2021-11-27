@@ -67,27 +67,32 @@ namespace NTOJSpaceDiscordBot.Services
                 return false;
 
             // Параллельно оправляем команду и ждём результат
-            var taskResult = await Task.Run(() => {
-
-                var readBuff = "";
-
-                _serialPort.DiscardInBuffer();
-                _serialPort.DiscardOutBuffer();
-
-                _serialPort.Write(FORWARD);
-
-                Thread.Sleep(100);
-
-                while(_serialPort.BytesToRead > 0)
-                {
-                    readBuff += _serialPort.ReadExisting();
-                }
-  
-                return readBuff;
-            });
+            var taskResult = await Task.Run(() => SendCommand(FORWARD));
 
             // Проверяем, что пришёл корректный результат
-            return taskResult == OK;
+            return taskResult.Contains(OK);
+        }
+
+        /// <summary>
+        /// Отправить команду на последовательный порт.
+        /// </summary>
+        /// <param name="command">Команда на исполнение.</param>
+        /// <returns>Возвращаемый результат выполнения команды.</returns>
+        private string SendCommand(string command)
+        {
+            var readBuff = "";
+
+            _serialPort.Write(command);
+
+            Thread.Sleep(500);
+
+            while (_serialPort.BytesToRead > 0)
+            {
+                readBuff += _serialPort.ReadExisting();
+                Thread.Sleep(100);
+            }
+
+            return readBuff;
         }
     }
 }
