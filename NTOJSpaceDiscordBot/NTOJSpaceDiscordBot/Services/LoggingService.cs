@@ -11,6 +11,8 @@ namespace NTOJSpaceDiscordBot.Services
     /// </summary>
     public class LoggingService
     {
+        private DiscordSocketClient _client;
+
         /// <summary>
         /// Настраиваем логирования клиента и команд.
         /// </summary>
@@ -18,9 +20,23 @@ namespace NTOJSpaceDiscordBot.Services
         /// <param name="commandService">Сервис команд Дискордаю</param>
         public LoggingService(DiscordSocketClient client, CommandService commandService)
         {
-            client.Log += LogAsync;
-            client.Ready += ReadyAsync;
+            _client = client;
+
+            _client.Log += LogAsync;
+            _client.Ready += ReadyAsync;
+            _client.MessageReceived += Client_MessageReceived;
+
             commandService.Log += LogAsync;
+        }
+
+        private Task Client_MessageReceived(SocketMessage arg)
+        {
+            if (arg.Author.Id == _client.CurrentUser.Id)
+                return Task.CompletedTask;
+
+            Console.WriteLine($"{arg.Author}, {arg.CreatedAt}, {arg.Channel}, {arg.Content}");
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
