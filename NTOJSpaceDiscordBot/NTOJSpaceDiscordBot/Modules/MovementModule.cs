@@ -26,7 +26,9 @@ namespace NTOJSpaceDiscordBot.Modules
             _serialPortService = services.GetRequiredService<SerialPortService>();
         }
 
-        [Command("forward")]
+        //[Command("forward")]
+        //[Alias("w")]
+        [Command("2")]
         public async Task Forward()
         {
             var result = await _serialPortService.SendCommandAsync(SerialPortService.FORWARD);
@@ -34,7 +36,9 @@ namespace NTOJSpaceDiscordBot.Modules
             await ReplyAsync($"{Context.User} двигается вперёд: {result}");
         }
 
-        [Command("back")]
+        //[Command("back")]
+        //[Alias("s")]
+        [Command("8")]
         public async Task Back()
         {
             var result = await _serialPortService.SendCommandAsync(SerialPortService.BACK);
@@ -42,7 +46,9 @@ namespace NTOJSpaceDiscordBot.Modules
             await ReplyAsync($"{Context.User} двигается назад: {result}");
         }
 
-        [Command("left")]
+        //[Command("left")]
+        //[Alias("a")]
+        [Command("4")]
         public async Task Left()
         {
             var result = await _serialPortService.SendCommandAsync(SerialPortService.LEFT);
@@ -50,7 +56,9 @@ namespace NTOJSpaceDiscordBot.Modules
             await ReplyAsync($"{Context.User} двигается влево: {result}");
         }
 
-        [Command("right")]
+        //[Command("right")]
+        //[Alias("d")]
+        [Command("6")]
         public async Task Right()
         {
             var result = await _serialPortService.SendCommandAsync(SerialPortService.RIGHT);
@@ -58,12 +66,14 @@ namespace NTOJSpaceDiscordBot.Modules
             await ReplyAsync($"{Context.User} двигается вправо: {result}");
         }
 
-        [Command("stop")]
+        //[Command("stop")]
+        //[Alias("x")]
+        [Command("5")]
         public async Task Stop()
         {
             var result = await _serialPortService.SendCommandAsync(SerialPortService.STOP);
 
-            await ReplyAsync($"{Context.User} двигается вправо: {result}");
+            await ReplyAsync($"{Context.User} сам не двигается: {result}");
         }
     }
 }
