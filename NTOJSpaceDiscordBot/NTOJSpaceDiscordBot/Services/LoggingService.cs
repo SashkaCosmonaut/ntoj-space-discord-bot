@@ -10,7 +10,7 @@ namespace NTOJSpaceDiscordBot.Services
     /// <summary>
     /// Сервис для логгирования события Дискорда.
     /// </summary>
-    public class LoggingService
+    public class LoggingService : IDisposable
     {
         private readonly DiscordSocketClient _discordClient;
 
@@ -29,6 +29,11 @@ namespace NTOJSpaceDiscordBot.Services
             var commandService = services.GetRequiredService<CommandService>();
 
             commandService.Log += LogAsync;
+        }
+
+        public void Dispose()
+        {
+            
         }
 
         /// <summary>
@@ -51,7 +56,7 @@ namespace NTOJSpaceDiscordBot.Services
             if (arg.Author.Id == _discordClient.CurrentUser.Id)
                 return Task.CompletedTask;
 
-            Console.WriteLine($"{arg.Author}, {arg.CreatedAt}, {arg.Channel}, {arg.Content}");
+            Console.WriteLine($"{arg.Author}, {arg.Timestamp}, {arg.Channel}, {arg.Content}");
 
             return Task.CompletedTask;
         }
