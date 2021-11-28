@@ -65,7 +65,8 @@ namespace NTOJSpaceDiscordBot.Services
             // Perform prefix check. You may want to replace this with
             // (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
             // for a less traditional command format like !help.
-            if (!message.HasCharPrefix('!', ref argPos)) return;
+            // Проверяем ещё, что пишут только в корректный канал 
+            if (/*!message.HasCharPrefix('!', ref argPos) || */message.Channel.Id != 913720736546451476) return;
 
             // TODO: Добавить проверку канала?
 
