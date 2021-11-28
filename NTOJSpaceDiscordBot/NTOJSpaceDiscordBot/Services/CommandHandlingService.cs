@@ -16,6 +16,7 @@ namespace NTOJSpaceDiscordBot.Services
         private readonly CommandService _commandService;
         private readonly DiscordSocketClient _discordClient;
         private readonly IServiceProvider _services;
+        private readonly SerialPortService _serialPortService;
 
         /// <summary>
         /// Конструктор сервиса.
@@ -25,6 +26,7 @@ namespace NTOJSpaceDiscordBot.Services
         {
             _commandService = services.GetRequiredService<CommandService>();
             _discordClient = services.GetRequiredService<DiscordSocketClient>();
+            _serialPortService = services.GetRequiredService<SerialPortService>();
 
             _services = services;
 
@@ -59,24 +61,33 @@ namespace NTOJSpaceDiscordBot.Services
             // Ignore system messages, or messages from other bots
             if (!(rawMessage is SocketUserMessage message) || message.Source != MessageSource.User) return;
 
+            // Проверяем, что пишут только в корректный канал 
+            if (message.Channel.Id != 913720736546451476) return;
+
+            // Create a Command Context.
+            var context = new SocketCommandContext(_discordClient, message);
+
+            var result = await _serialPortService.SendCommandAsync(rawMessage.Content);
+
+            await rawMessage.Channel.SendMessageAsync($"{context.User} нажал {message}, принято: {result}");
+
+
+
+
+
             // This value holds the offset where the prefix ends
-            var argPos = 0;
+            //var argPos = 0;
 
             // Perform prefix check. You may want to replace this with
             // (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
             // for a less traditional command format like !help.
             // Проверяем ещё, что пишут только в корректный канал 
-            if (/*!message.HasCharPrefix('!', ref argPos) || */message.Channel.Id != 913720736546451476) return;
-
-            // TODO: Добавить проверку канала?
-
-            // Create a Command Context.
-            var context = new SocketCommandContext(_discordClient, message);
+            //if (/*!message.HasCharPrefix('!', ref argPos) || */ message.Channel.Id != 913720736546451476) return;
 
             // Perform the execution of the command. In this method,
             // the command service will perform precondition and parsing check
             // then execute the command if one is matched.
-            await _commandService.ExecuteAsync(context, argPos, _services);
+            //await _commandService.ExecuteAsync(context, argPos, _services);
 
             // Note that normally a result will be returned by this format, but here
             // we will handle the result in CommandExecutedAsync.
