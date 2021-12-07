@@ -1,3 +1,5 @@
+// Для справки см.: https://github.com/SashkaCosmonaut/ntoj-space-discord-bot
+
 #include <IRremote.h>
 
 #define IR_SEND_PIN 13      // Константа из библиотеки задания пина для ИК-диода

@@ -13,6 +13,7 @@ namespace NTOJSpaceDiscordBot
 {
     /// <summary>
     /// Настраиваем подключение к Дискорду.
+    /// Для справки см.: https://github.com/SashkaCosmonaut/ntoj-space-discord-bot
     /// </summary>
     public class Program
     {
@@ -32,6 +33,8 @@ namespace NTOJSpaceDiscordBot
         /// <returns>Программа работает вечно, пока не будет закрыта.</returns>
         public async Task MainAsync()
         {
+            Console.WriteLine("Developed by CAD department, VSTU\nSee: https://github.com/SashkaCosmonaut/ntoj-space-discord-bot \n");
+
             // You should dispose a service provider created using ASP.NET
             // when you are finished using it, at the end of your app's lifetime.
             // Dependency injection handles calling Dispose for us.
