@@ -95,8 +95,8 @@ namespace NTOJSpaceDiscordBot
                 .AddSingleton(new DiscordSocketClient(discordSocketConfig))
                 .AddSingleton(new CommandService(commandServiceConfig))
                 .AddSingleton<LoggingService>()
-                .AddSingleton<CommandHandlingService>()
-                .AddSingleton<SerialPortService>()
+                .AddSingleton(serviceProvider => new CommandHandlingService(serviceProvider, programConfig))
+                .AddSingleton(serviceProvider => new SerialPortService(programConfig))
 
                 // When all your required services are in the collection, build the container.
                 // Tip: There's an overload taking in a 'validateScopes' bool to make sure

@@ -19,16 +19,24 @@ namespace NTOJSpaceDiscordBot.Services
         private readonly SerialPortService _serialPortService;
 
         /// <summary>
+        /// ID канала, из которого только и будет считывать команды бот.
+        /// </summary>
+        private readonly ulong _requiredChannelId;
+
+        /// <summary>
         /// Конструктор сервиса.
         /// </summary>
         /// <param name="services">Keep DI container around for use with commands.</param>
-        public CommandHandlingService(IServiceProvider services)
+        /// <param name="programConfig">Параметры запуска программы.</param>
+        public CommandHandlingService(IServiceProvider services, ProgramConfig programConfig)
         {
             _commandService = services.GetRequiredService<CommandService>();
             _discordClient = services.GetRequiredService<DiscordSocketClient>();
             _serialPortService = services.GetRequiredService<SerialPortService>();
 
             _services = services;
+
+            _requiredChannelId = programConfig.RequiredChannelId;
 
             _discordClient.MessageReceived += MessageReceivedAsync;
 
@@ -62,7 +70,7 @@ namespace NTOJSpaceDiscordBot.Services
             if (!(rawMessage is SocketUserMessage message) || message.Source != MessageSource.User) return;
 
             // Проверяем, что пишут только в корректный канал 
-            if (message.Channel.Id != 913720736546451476) return;
+            if (message.Channel.Id != _requiredChannelId) return;
 
             // Create a Command Context.
             var context = new SocketCommandContext(_discordClient, message);

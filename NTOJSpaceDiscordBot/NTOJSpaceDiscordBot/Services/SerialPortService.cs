@@ -26,14 +26,15 @@ namespace NTOJSpaceDiscordBot.Services
         /// <summary>
         /// Конструктор по умолчанию.
         /// </summary>
-        public SerialPortService()
+        /// <param name="programConfig">Параметры запуска программы.</param>
+        public SerialPortService(ProgramConfig programConfig)
         {
             _serialPort = new SerialPort
             {
-                PortName = "COM3",
-                BaudRate = 9600,
-                ReadTimeout = 1000,
-                WriteTimeout = 1000
+                PortName = programConfig.PortName,
+                BaudRate = programConfig.BaudRate,
+                ReadTimeout = programConfig.ReadTimeout,
+                WriteTimeout = programConfig.WriteTimeout
             };
         }
 
