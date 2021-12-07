@@ -28,6 +28,6 @@
         /// <summary>
         /// ID канала, из которого только и будет считывать команды бот.
         /// </summary>
-        public int RequiredChannelId { get; set; }
+        public ulong RequiredChannelId { get; set; }
     }
 }
