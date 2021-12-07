@@ -6,6 +6,8 @@ using System.Threading;
 using Discord.WebSocket;
 using Discord.Commands;
 using NTOJSpaceDiscordBot.Services;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace NTOJSpaceDiscordBot
 {
@@ -84,6 +86,8 @@ namespace NTOJSpaceDiscordBot
                 CaseSensitiveCommands = false                
             };
 
+            var programConfig = ReadProgramConfig();
+
             return new ServiceCollection()
 
                 // Repeat this for all the service classes
@@ -98,6 +102,17 @@ namespace NTOJSpaceDiscordBot
                 // Tip: There's an overload taking in a 'validateScopes' bool to make sure
                 // you haven't made any mistakes in your dependency graph.
                 .BuildServiceProvider();
+        }
+
+        /// <summary>
+        /// Прочесть настройки программы из конфигурационного файла.
+        /// </summary>
+        /// <returns>Объект настроек программы.</returns>
+        private ProgramConfig ReadProgramConfig()
+        {
+            using var sr = new StreamReader("config.json");
+            
+            return JsonConvert.DeserializeObject<ProgramConfig>(sr.ReadToEnd());
         }
     }
 }
