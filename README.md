@@ -14,3 +14,4 @@
 ## Настройка бота
 
 ## Настройка Arduino
+![image](https://user-images.githubusercontent.com/1927563/145013123-6461f0be-dfbb-4ea0-8290-61b57dc612b2.png)
