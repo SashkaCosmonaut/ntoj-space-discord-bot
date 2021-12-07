@@ -1,0 +1,7 @@
+{
+  "PortName": "COM3",
+  "BaudRate": 9600,
+  "ReadTimeout": 1000,
+  "WriteTimeout": 1000,
+  "RequiredChannelId": 913720736546451476
+}
